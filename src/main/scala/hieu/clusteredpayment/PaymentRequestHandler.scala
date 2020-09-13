@@ -67,7 +67,7 @@ object PaymentRequestHandler {
   final case class PaymentAccepted(transactionId: TransactionId) extends Response
 
   final case class PaymentRejected(reason: String) extends Response
-  
+
 }
 
 class PaymentRequestHandler extends PersistentActor with ActorLogging{

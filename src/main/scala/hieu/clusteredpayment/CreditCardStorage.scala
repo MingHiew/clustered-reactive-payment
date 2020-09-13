@@ -41,7 +41,10 @@ class CreditCardStorage extends PersistentActor with ActorLogging {
         log.warning("Tried adding already existing card")
         replyTo ! CreditCardExists(userId,last4Digits)
       } else {
-        persist(CreditCardAdded(CreditCardId(UUID.randomUUID().toString), userId, last4Digits))
+        val creditCardId = CreditCardId(UUID.randomUUID().toString)
+        persist(CreditCardAdded(creditCardId, userId, last4Digits)) {_=>
+          cards += creditCardId -> StoredCreditCard(creditCardId,userId,last4Digits)
+        }
       }
     }
     case FindById(id,replyTo) if cards.contains(id) => {
@@ -52,5 +55,5 @@ class CreditCardStorage extends PersistentActor with ActorLogging {
     }
   }
 
-  override def persistenceId: String = ???
+  override def persistenceId: String = "credit-card-storage"
 }
